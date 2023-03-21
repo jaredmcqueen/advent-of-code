@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -18,7 +17,7 @@ func readFile(filename string) string {
 
 func generateSection(beginning, end int) []int {
 	var result []int
-	for i := beginning; i < end+1; i++ {
+	for i := beginning; i <= end; i++ {
 		result = append(result, i)
 	}
 	return result
@@ -47,14 +46,14 @@ func parseLines(text string) [][][]int {
 	return data
 }
 
-func main() {
-	ft := readFile("input.txt")
-	sections := parseLines(ft)
-	dupes1 := part1(sections)
-	fmt.Println("part 1 dupes:", dupes1)
-	dupes2 := part2(sections)
-	fmt.Println("part 2 dupes:", dupes2)
-}
+// func main() {
+// 	ft := readFile("input.txt")
+// 	sections := parseLines(ft)
+// 	dupes1 := part1(sections)
+// 	fmt.Println("part 1 dupes:", dupes1)
+// 	dupes2 := part2(sections)
+// 	fmt.Println("part 2 dupes:", dupes2)
+// }
 
 func part1(elfPairs [][][]int) int {
 	dupes := 0
@@ -119,4 +118,29 @@ func part2(elfPairs [][][]int) int {
 
 	}
 	return dupes
+}
+
+func main() {
+	d, _ := os.ReadFile("input.txt")
+	pairs := strings.Split(string(d), "\n")
+	c1, c2 := 0, 0
+	for _, p := range pairs {
+		if p == "" {
+			continue
+		}
+		s1, s2 := strings.Split(p, ",")[0], strings.Split(p, ",")[1]
+		start1, _ := strconv.Atoi(strings.Split(s1, "-")[0])
+		start2, _ := strconv.Atoi(strings.Split(s2, "-")[0])
+		end1, _ := strconv.Atoi(strings.Split(s1, "-")[1])
+		end2, _ := strconv.Atoi(strings.Split(s2, "-")[1])
+
+		if (start1 >= start2 && end1 <= end2) || (start2 >= start1 && end2 <= end1) {
+			c1++
+		}
+		if (start1 <= end2) && (start2 <= end1) {
+			// if (start1 <= end2) && (end1 >= start2) {
+			c2++
+		}
+	}
+	print("Part One: ", c1, " Part Two: ", c2)
 }
